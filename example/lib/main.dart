@@ -89,12 +89,13 @@ class _ScrollToDemoState extends State<ScrollToDemo> {
             padding: const EdgeInsets.all(16),
             color: Colors.grey.shade100,
             child: Column(
+              spacing: 8,
               children: [
                 const Text(
                   'Tap buttons to scroll to sections',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -111,7 +112,6 @@ class _ScrollToDemoState extends State<ScrollToDemo> {
                     ],
                   ],
                 ),
-                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -189,9 +189,9 @@ class _ScrollToDemoState extends State<ScrollToDemo> {
           title: const Text('Animation Demo'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
+            spacing: 16,
             children: [
               const Text('Choose an animation type:'),
-              const SizedBox(height: 16),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -300,6 +300,7 @@ class Section extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
         children: [
           Text(
             'Section ${index + 1}',
@@ -309,7 +310,6 @@ class Section extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 16),
           Text(
             'This is section ${index + 1}. Each section is automatically registered with the ScrollToController for smooth navigation',
             style: const TextStyle(
@@ -318,7 +318,6 @@ class Section extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: scrollToSection,
             style: ElevatedButton.styleFrom(
