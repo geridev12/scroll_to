@@ -1,10 +1,41 @@
+# ==============================================================================
+# PROJECT METADATA
+# ==============================================================================
+
 name: scroll_to
-description: "A new Flutter package project."
-version: 0.0.1
+
+description: >
+  A Flutter package for smooth scrolling to specific widgets with customizable animations, 
+  scroll controllers, and automatic registration.
+
+version: 0.1.0
+
+homepage: https://github.com/geridev12/scroll_to
+repository: https://github.com/geridev12/scroll_to
+issue_tracker: https://github.com/geridev12/scroll_to/issues
+
+topics:
+  - flutter
+  - scroll
+  - animation
+  - widget
+  - navigation
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+# ==============================================================================
+# DEPENDENCIES
+# ==============================================================================
 
 environment:
-  sdk: ^3.7.0
-  flutter: ">=1.17.0"
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
