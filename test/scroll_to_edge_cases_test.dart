@@ -235,9 +235,8 @@ void main() {
               controller: controller,
               itemCount: 5,
               scrollDirection: Axis.horizontal,
-              itemBuilder:
-                  (context, index) =>
-                      SizedBox(width: 100, child: Text('Item $index')),
+              itemBuilder: (context, index) =>
+                  SizedBox(width: 100, child: Text('Item $index')),
             ),
           ),
         ),
