@@ -1,4 +1,8 @@
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:scroll_to/scroll_to.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,116 +11,324 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'ScrollTo Package Demo',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: const ScrollToDemo(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class ScrollToDemo extends StatefulWidget {
+  const ScrollToDemo({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ScrollToDemo> createState() => _ScrollToDemoState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _ScrollToDemoState extends State<ScrollToDemo> {
+  late final ScrollToController _scrollController;
+  final UnmodifiableListView<Color> _colors = UnmodifiableListView([
+    Colors.red.shade300,
+    Colors.green.shade300,
+    Colors.blue.shade300,
+    Colors.orange.shade300,
+    Colors.purple.shade300,
+    Colors.teal.shade300,
+    Colors.indigo.shade300,
+    Colors.pink.shade300,
+    Colors.amber.shade300,
+    Colors.cyan.shade300,
+  ]);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollToController(
+      defaultConfig: const ScrollToConfig(debugMode: kDebugMode),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSection(int index) {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollController.scrollToKey(
+        index,
+        config: ScrollToConfig(
+          duration: const Duration(milliseconds: 800),
+          animationType: ScrollAnimationType.easeInOut,
+          alignment: 0.1,
+          paddingTop: 16,
+          debugMode: true,
+          onScrollStart: () => debugPrint('Scroll started to section $index'),
+          onScrollComplete:
+              () => debugPrint('Scroll completed to section $index'),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
+        title: const Text('ScrollTo'),
+        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.grey.shade100,
+            child: Column(
+              children: [
+                const Text(
+                  'Tap buttons to scroll to sections',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (int i = 0; i < _colors.length; i++) ...[
+                      ElevatedButton(
+                        onPressed: () => _scrollToSection(i),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _colors[i],
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text('Section ${i + 1}'),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed:
+                          () async => _scrollController.scrollToTop(
+                            config: ScrollToConfig.fast,
+                          ),
+                      icon: const Icon(Icons.arrow_upward),
+                      label: const Text('Top'),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed:
+                          () async => _scrollController.scrollToBottom(
+                            config: ScrollToConfig.bouncy,
+                          ),
+                      icon: const Icon(Icons.arrow_downward),
+                      label: const Text('Bottom'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController.scrollController,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  for (int index = 0; index < _colors.length; index++) ...[
+                    ScrollToWidget(
+                      id: index,
+                      controller: _scrollController,
+                      child: Section(
+                        index: index,
+                        colors: _colors,
+                        scrollToSection:
+                            () =>
+                                _scrollToSection((index + 1) % _colors.length),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: AnimatedBuilder(
+        animation: _scrollController,
+        builder: (context, child) {
+          return FloatingActionButton(
+            onPressed:
+                _scrollController.isScrolling
+                    ? null
+                    : () => _showAnimationDemo(context),
+            backgroundColor: _scrollController.isScrolling ? Colors.grey : null,
+            child: Icon(
+              _scrollController.isScrolling
+                  ? Icons.hourglass_empty
+                  : Icons.play_arrow,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showAnimationDemo(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Animation Demo'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Choose an animation type:'),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Linear',
+                    config: ScrollToConfig.fast,
+                  ),
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Fast',
+                    config: ScrollToConfig.fast,
+                  ),
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Smooth',
+                    config: ScrollToConfig.smooth,
+                  ),
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Bouncy',
+                    config: ScrollToConfig.bouncy,
+                  ),
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Spring',
+                    config: ScrollToConfig.spring,
+                  ),
+                  AnimationButton(
+                    controller: _scrollController,
+                    label: 'Elastic',
+                    config: const ScrollToConfig(
+                      duration: Duration(milliseconds: 1500),
+                      animationType: ScrollAnimationType.elastic,
+                      alignment: 0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
             ),
           ],
-        ),
+        );
+      },
+    );
+  }
+}
+
+class AnimationButton extends StatelessWidget {
+  const AnimationButton({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.config,
+  });
+
+  final ScrollToController controller;
+  final String label;
+  final ScrollToConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        Navigator.pop(context);
+        await controller.scrollToKey(5, config: config);
+      },
+      child: Text(label),
+    );
+  }
+}
+
+class Section extends StatelessWidget {
+  const Section({
+    super.key,
+    required this.index,
+    required this.colors,
+    required this.scrollToSection,
+  });
+
+  final int index;
+  final List<Color> colors;
+  final VoidCallback scrollToSection;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colors[index],
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(26),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Section ${index + 1}',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'This is section ${index + 1}. Each section is automatically registered with the ScrollToController for smooth navigation',
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: scrollToSection,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: colors[index],
+            ),
+            child: Text('Go to Section ${((index + 1) % colors.length) + 1}'),
+          ),
+        ],
+      ),
     );
   }
 }
