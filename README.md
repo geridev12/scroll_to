@@ -2,7 +2,7 @@
 
 A Flutter package for smooth scrolling to specific widgets with customizable animations.
 
-<img src="docs/showcase.gif" alt="ScrollTo Demo" width="500"/>
+<img src="docs/showcase.gif" alt="ScrollTo Demo" width="350"/>
 
 ## Features
 
