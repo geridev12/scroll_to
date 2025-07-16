@@ -8,7 +8,7 @@ description: >
   A Flutter package for smooth scrolling to specific widgets with customizable animations, 
   scroll controllers, and automatic registration.
 
-version: 0.1.0
+version: 0.0.1
 
 homepage: https://github.com/geridev12/scroll_to
 repository: https://github.com/geridev12/scroll_to
